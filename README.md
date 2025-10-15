@@ -20,7 +20,8 @@ TCP 建立連線時會有三次握手
 1. client 發送 connect 給 server (listening)
 2. server 接收到後 accept 再傳給 client (connect)
 3. client 接收到後開始與 server 通信
-斷開連線有四次揮手。
+斷開連線有四次揮手。\
+注：只有第三次可以攜帶數據，前兩次都不行
 
 ## 2. Socket
 第一步要先建立 socket，linux 中使用```int socket(int domain, int type, int protocol);```來建立。成功產生socket時，會返回該 socket 的檔案描述符 (socket file descriptor)，我們可以透過它來操作 socket。失敗則會回傳-1(INVALID_SOCKET)。
@@ -48,3 +49,9 @@ socket 綁定成功後就可以使用 ```int listen(int sockfd, int backlog);```
 
 ## 6. connect
 就是 client 端的 bind，要綁對方的 ip:port。```int connect(int sockfd, struct sockaddr *server, int addr_len);```。client 端藉由 connect 發送握手訊息給 server。
+
+## 7. 斷開連線
+1. 其中一方發起，假設是 Client 端
+2. Server 端收到後一樣會回傳給 Client 端確認所有訊息已傳遞完成
+3. 傳遞完成後 Client 會再向 Server 端發送一次確認
+4. Server 回覆 Client 端確認後即斷開
