@@ -40,9 +40,12 @@ DELETE => 刪除（D）
 ```
 特點就是響應完就斷線，當然也可以用 keep-alive 的方式保持連線，但是會一直需要傳遞標頭所以其實會需要一直握手，若要雙向溝通則需要用到 WebSocket。
 
-## 二、WebSocket
+## 二、Webhook
+Webhook 是一種基於 HTTP 的方式，當一端有新的訊息要給另一端時，就可以發起一個請求給對方，例如訂單、通訊軟體的通知等。因為是 HTTP，所以只要把對方網址記住後，當有更新時就可以收到通知了。
+
+## 三、WebSocket
 與 HTTP 的差異在於 WebSocket 可以雙向溝通，且建立連線後就保持連線，不像 HTTP keep-alive 一樣需要一直握手傳標頭，適合用於即時通訊或是 IOT 裝置。現在建立 WebSocket 也有許多套件可以用，在此就以 FLASK 作後端範例，前端就是 js。在傳遞訊息時本身是未加密的，通常希望只有接收跟發送方知道，中間攔截者就算攔截到也無法知道內容，所以在 server 端就需要有公鑰跟私鑰，在前端就可以使用 wss 來做加密通訊，所以現在都會強調網址開頭是 ```https```，後面的 s 就是 security 的意思。不過加密後通常密文檔案會比較大。
-```後端
+```python
 #pip install flask flask-socketio 需要安裝
 
 from flask import Flask, render_template
@@ -68,7 +71,7 @@ if __name__ == '__main__':
                  port=5000,
                  ssl_context=('cert.pem', 'key.pem'))
 ```
-```前端
+```js
 <!DOCTYPE html>
 <html>
 <head>
